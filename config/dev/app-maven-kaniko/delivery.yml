@@ -1,0 +1,34 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: app-maven-kaniko
+  annotations:
+    ootb.apps.tanzu.vmware.com/servicebinding-workload: "true"
+    ootb.apps.tanzu.vmware.com/apidescriptor-ref: "true"
+  labels:
+    app.kubernetes.io/part-of: app-maven-kaniko
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/component: run
+    carto.run/workload-name: app-maven-kaniko
+spec:
+  template:
+    metadata:
+      annotations:
+        conventions.carto.run/applied-conventions: appliveview-sample/app-live-view-appflavour-check
+        developer.conventions/target-containers: workload
+      labels:
+        app.kubernetes.io/component: run
+        app.kubernetes.io/part-of: app-maven-kaniko
+        apps.tanzu.vmware.com/has-tests: "true"
+        apps.tanzu.vmware.com/workload-type: web
+        carto.run/workload-name: app-maven-kaniko
+    spec:
+      containers:
+      - image: gcr.io/ship-interfaces-dev/supply-chain/app-maven-kaniko-dev@sha256:d0551a465a55ab5a4894909d3466290285f20a530f73332d1f0be602c69a461a
+        name: workload
+        resources: {}
+        securityContext:
+          runAsUser: 1000
+      serviceAccountName: default
+
